@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Usage: copy_photo_folder folder-in-working-directory"
+echo "scp -r $(pwd)/$1 pi@www.overly.me:/media/share/owncloud/family/files/photos"
+scp -r "$(pwd)/$1" pi@www.overly.me:/media/share/owncloud/family/files/photos
