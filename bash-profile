@@ -71,7 +71,7 @@ alias hosts='s /private/etc/hosts'
 alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, only prints response headers and time it took.
 
 # JAVA
-DEFAULT_JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home"
+DEFAULT_JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home"
 export JAVA_HOME=$DEFAULT_JAVA_HOME
 alias jv='java -version'
 alias jv6='export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home && jv'
@@ -121,5 +121,3 @@ source "$HOME/Applications/google-cloud-sdk/path.bash.inc"
 
 # The next line enables bash completion for gcloud.
 source "$HOME/Applications/google-cloud-sdk/completion.bash.inc"
-
-# export PATH=/Applications/kubernetes/platforms/darwin/386:$PATH
