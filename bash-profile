@@ -110,18 +110,19 @@ export PATH=.:$PATH #Current directory
 export PATH=$PATH:"$HOME/Code/tgsoverly/scripts" #other scripts under version control
 export PATH=$PATH:/usr/local/bin #Homebrew
 
+# Hate typing grailsw or gradlew all the time wrongly.
 function g(){
-  if [ -e grailsw ]
+  if [ -e gradlew ]
+  then
+    jv8
+    ./gradlew $@
+
+  elif [ -e grailsw ]
   then
     jv7
     ./grailsw $@
   fi
 
-  if [ -e gradlew ]
-  then
-    jv8
-    ./gradlew $@
-  fi
 }
 
 
