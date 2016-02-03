@@ -89,7 +89,7 @@ alias atom-shell='/Applications/Utilities/Atom.app/Contents/MacOS/Atom'
 alias atom='/Applications/Atom.app/Contents/MacOS/Atom'
 
 # Computers
-alias pi='ssh pi@www.overly.me'
+alias pi='ssh pi@overly.me'
 
 
 # kubernetes
@@ -110,6 +110,56 @@ export PATH=.:$PATH #Current directory
 export PATH=$PATH:"$HOME/Code/tgsoverly/scripts" #other scripts under version control
 export PATH=$PATH:/usr/local/bin #Homebrew
 
+function g(){
+  if [ -e grailsw ]
+  then
+    jv7
+    ./grailsw $@
+  fi
+
+  if [ -e gradlew ]
+  then
+    jv8
+    ./gradlew $@
+  fi
+}
+
+
+# Git Alias from bash it
+alias gcl='git clone'
+alias ga='git add'
+alias gall='git add -A'
+alias gus='git reset HEAD'
+alias gm="git merge"
+alias get='git'
+alias gst='git status'
+alias gs='git status'
+alias gss='git status -s'
+alias gl='git pull'
+alias gpr='git pull --rebase'
+alias gpp='git pull && git push'
+alias gup='git fetch && git rebase'
+alias gp='git push'
+alias gpo='git push origin'
+alias gdv='git diff -w "$@" | vim -R -'
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias gcm='git commit -v -m'
+alias gci='git commit --interactive'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcount='git shortlog -sn'
+alias gcp='git cherry-pick'
+alias gco='git checkout'
+alias gexport='git archive --format zip --output'
+alias gdel='git branch -D'
+alias gmu='git fetch origin -v; git fetch upstream -v; git merge upstream/master'
+alias gll='git log --graph --pretty=oneline --abbrev-commit'
+alias gg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+alias ggs="gg --stat"
+alias gsl="git shortlog -sn"
+alias gw="git whatchanged"
+
 # Load Bash It
 source $BASH_IT/bash_it.sh
 
@@ -121,3 +171,6 @@ source "$HOME/Applications/google-cloud-sdk/path.bash.inc"
 
 # The next line enables bash completion for gcloud.
 source "$HOME/Applications/google-cloud-sdk/completion.bash.inc"
+
+export NVM_DIR="/Users/toverly/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
