@@ -49,6 +49,12 @@ alias redis-stop='sudo launchctl stop io.redis.redis-server'
 
 # DOCKER
 alias docker-clean='docker stop $(docker ps -a -q);docker rm $(docker ps -a -q);docker rmi $(docker images -q)'
+alias docker-prune='docker rmi $(docker images -f "dangling=true" -q)'
+PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
+export PATH=$PATH:$HOME/Applications
+
+# size
+alias size10='find . -type d -print0 | xargs -0 du -s | sort -n | tail -10 | cut -f2 | xargs -I{} du -sh {}'
 
 # FOLDER
 alias ~='cd ~'
@@ -65,20 +71,24 @@ alias rds="find . -name '*.DS_Store' -type f -delete"
 # Mouse
 alias fastmouse='defaults write -g com.apple.mouse.scaling 17'
 
+# GO
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOPATH/bin
+
 # Networking
 alias openports='sudo lsof -i -P | grep -i "listen"'
 alias hosts='s /private/etc/hosts'
 alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, only prints response headers and time it took.
 
 # JAVA
-DEFAULT_JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home"
+DEFAULT_JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home"
 export JAVA_HOME=$DEFAULT_JAVA_HOME
 alias jv='java -version'
 alias jv6='export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home && jv'
 alias jv7='export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home && jv'
 alias jv8="export JAVA_HOME=$DEFAULT_JAVA_HOME && jv"
 
-alias g3='gvm use grails 3.0.1'
+alias g3='gvm use grails 3.0.12'
 alias g2='gvm use grails 2.4.3'
 
 # Gradle
@@ -161,8 +171,10 @@ alias ggs="gg --stat"
 alias gsl="git shortlog -sn"
 alias gw="git whatchanged"
 
-# Load Bash It
-source $BASH_IT/bash_it.sh
+if [ -f "$(brew --prefix bash-git-prompt)/share/gitprompt.sh" ]; then
+  GIT_PROMPT_THEME=Default
+  source "$(brew --prefix bash-git-prompt)/share/gitprompt.sh"
+fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
@@ -173,5 +185,9 @@ source "$HOME/Applications/google-cloud-sdk/path.bash.inc"
 # The next line enables bash completion for gcloud.
 source "$HOME/Applications/google-cloud-sdk/completion.bash.inc"
 
-export NVM_DIR="/Users/toverly/.nvm"
+source "/usr/local/git/contrib/completion/git-completion.bash"
+
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+nvm use 6.2
