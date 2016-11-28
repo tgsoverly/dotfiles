@@ -172,9 +172,21 @@ alias gsl="git shortlog -sn"
 alias gw="git whatchanged"
 
 if [ -f "$(brew --prefix bash-git-prompt)/share/gitprompt.sh" ]; then
-  GIT_PROMPT_THEME=Default
+
+  GIT_PROMPT_STAGED="${Yellow}● "
+  GIT_PROMPT_UNTRACKED="${Cyan}… "
+  GIT_PROMPT_STASHED="${BoldMagenta}⚑ "
+  GIT_PROMPT_CLEAN="${Green}✔ "
+  GIT_PROMPT_COMMAND_OK="${Green}✔ "
+  GIT_PROMPT_COMMAND_FAIL="${Red}✘ "
+
+  GIT_PROMPT_END_USER=" $ "
+  GIT_PROMPT_END_ROOT=" # "
+
+  # GIT_PROMPT_START_ROOT="${GIT_PROMPT_START_USER}"
   source "$(brew --prefix bash-git-prompt)/share/gitprompt.sh"
 fi
+
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
