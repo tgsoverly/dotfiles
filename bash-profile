@@ -81,7 +81,6 @@ alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, 
 
 # JAVA
 alias jv='java -version'
-export JAVA_OPTS="-Xmx1024m"
 export JAVA_HOME="${HOME}/.sdkman/candidates/java/current/"
 alias jv8="sdk use java 8u131"
 alias jv7="sdk use java 7u79"
