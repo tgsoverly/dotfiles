@@ -4,17 +4,16 @@
 # This file is loaded from the .bash_profile in ~, but is under version control
 # to make it easy to setup new computers like I like it.
 #
+# The computer must have the following items installed to make this file work:
+#  1. iterm2
+#  2. atom editor
+#  3. sdkman
+#  4. nvm
+#  5. gcloud sdk
+#
 
 # Add rvm gems and nginx to the path
 export PATH=$PATH:~/.gem/ruby/1.8/bin:/opt/nginx/sbin
-
-# Path to the bash it configuration
-export BASH_IT=$HOME/.bash_it
-
-# Lock and Load a custom theme file
-# location /.bash_it/themes/
-export BASH_IT_THEME='powerline-plain'
-# export BASH_IT_THEME='modern'
 
 # Set my editor and git editor
 export EDITOR="atom --wait"
@@ -23,15 +22,17 @@ export GIT_EDITOR='atom --wait'
 # Don't check mail when opening terminal.
 unset MAILCHECK
 
+alias sprof='source ~/.bash_profile'
+alias prof='atom ~/.bash_profile;atom ~/Code/scripts/bash-profile'
+
 alias code='cd ~/Code'
-alias evo="cd ~/Code/evo/evo"
+alias evo="cd ~/Code/evo"
+alias ec="cd ~/Code/evo/grails-app/assets/client"
 
 bind '"[A":history-search-backward'
 bind '"[B":history-search-forward'
 
 # APPS
-alias sprof='source ~/.bash_profile'
-alias prof='atom ~/.bash_profile;atom ~/Code/tgsoverly/scripts/bash-profile'
 alias te='open -e'  #textedit
 alias f='open .' #open folder in finder
 alias vlc='./Applications/VLC.app/Contents/MacOS/VLC'
@@ -42,8 +43,6 @@ alias rake-here='bundle exec rake'
 # SERVERS
 alias postgresql-start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
 alias postgresql-stop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
-alias ftp-start='sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist'
-alias ftp-stop='sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist'
 alias redis-start='sudo launchctl start io.redis.redis-server'
 alias redis-stop='sudo launchctl stop io.redis.redis-server'
 
@@ -71,15 +70,14 @@ alias hosts='s /private/etc/hosts'
 alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, only prints response headers and time it took.
 
 # JAVA
-DEFAULT_JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home"
-export JAVA_HOME=$DEFAULT_JAVA_HOME
 alias jv='java -version'
-alias jv6='export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home && jv'
-alias jv7='export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home && jv'
-alias jv8="export JAVA_HOME=$DEFAULT_JAVA_HOME && jv"
+export JAVA_OPTS="-Xmx1024m"
+export JAVA_HOME="${HOME}/.sdkman/candidates/java/current/"
+alias jv8="sdk use java 8u131"
+alias jv7="sdk use java 7u79"
 
-alias g3='gvm use grails 3.0.1'
-alias g2='gvm use grails 2.4.3'
+alias g3='sdk use grails 3.1.9'
+alias g2='sdk use grails 2.4.3'
 
 # Gradle
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
@@ -90,7 +88,9 @@ alias atom='/Applications/Atom.app/Contents/MacOS/Atom'
 
 # Computers
 alias pi='ssh pi@overly.me'
-
+alias megan='ssh root@198.199.64.196'
+alias motmot='ssh root@45.55.178.30'
+alias evospace='ssh -L 3306:localhose:3306 root@104.131.86.143'
 
 # kubernetes
 alias ku='kubectl'
@@ -107,23 +107,31 @@ export MANWIDTH=200
 
 # PATH
 export PATH=.:$PATH #Current directory
-export PATH=$PATH:"$HOME/Code/tgsoverly/scripts" #other scripts under version control
-export PATH=$PATH:/usr/local/bin #Homebrew
+export PATH=$PATH:"$HOME/Code/scripts" #other scripts under version control
+export PATH=/usr/local/bin:$PATH #Homebrew
 
 function g(){
   if [ -e grailsw ]
   then
-    jv7
     ./grailsw $@
   fi
 
   if [ -e gradlew ]
   then
-    jv8
     ./gradlew $@
   fi
 }
 
+function c() {
+  ceedling $@
+}
+
+# Git branch in prompt.
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 # Git Alias from bash it
 alias gcl='git clone'
@@ -160,17 +168,21 @@ alias ggs="gg --stat"
 alias gsl="git shortlog -sn"
 alias gw="git whatchanged"
 
-# Load Bash It
-source $BASH_IT/bash_it.sh
-
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
-[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
+export SDKMAN_DIR="${HOME}/.sdkman"
+[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 # The next line updates PATH for the Google Cloud SDK.
-source "$HOME/Applications/google-cloud-sdk/path.bash.inc"
+source "${HOME}/Applications/google-cloud-sdk/path.bash.inc"
 
 # The next line enables bash completion for gcloud.
-source "$HOME/Applications/google-cloud-sdk/completion.bash.inc"
+source "${HOME}/Applications/google-cloud-sdk/completion.bash.inc"
 
-export NVM_DIR="/Users/toverly/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+export NVM_DIR="/Users/tgsoverly/.nvm"
+[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+# Load versions and go to directory
+nvm use 6.9.1
+echo "Y" | sdk use java 8u131
+code
