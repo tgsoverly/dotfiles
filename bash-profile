@@ -48,6 +48,12 @@ alias redis-stop='sudo launchctl stop io.redis.redis-server'
 
 # DOCKER
 alias docker-clean='docker stop $(docker ps -a -q);docker rm $(docker ps -a -q);docker rmi $(docker images -q)'
+alias docker-prune='docker rmi $(docker images -f "dangling=true" -q)'
+PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
+export PATH=$PATH:$HOME/Applications
+
+# size
+alias size10='find . -type d -print0 | xargs -0 du -s | sort -n | tail -10 | cut -f2 | xargs -I{} du -sh {}'
 
 # FOLDER
 alias ~='cd ~'
@@ -63,6 +69,10 @@ alias rds="find . -name '*.DS_Store' -type f -delete"
 
 # Mouse
 alias fastmouse='defaults write -g com.apple.mouse.scaling 17'
+
+# GO
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOPATH/bin
 
 # Networking
 alias openports='sudo lsof -i -P | grep -i "listen"'
@@ -110,8 +120,9 @@ export PATH=.:$PATH #Current directory
 export PATH=$PATH:"$HOME/Code/scripts" #other scripts under version control
 export PATH=/usr/local/bin:$PATH #Homebrew
 
+# Hate typing grailsw or gradlew all the time wrongly.
 function g(){
-  if [ -e grailsw ]
+  if [ -e gradlew ]
   then
     ./grailsw $@
   fi
