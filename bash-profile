@@ -5,19 +5,25 @@
 # to make it easy to setup new computers like I like it.
 #
 # The computer must have the following items installed to make this file work:
-#  1. iterm2
-#  2. atom editor
-#  3. sdkman
-#  4. nvm
-#  5. gcloud sdk
-#
+#  1. iterm2 -> download
+#  2. atom editor -> download
+#  3. sdkman -> bash script
+#  4. nvm -> bash script
+#  5. gcloud sdk -> download
+#  6. git -> brew
+#  7. bash-completion -> brew
 
-# Add rvm gems and nginx to the path
-export PATH=$PATH:~/.gem/ruby/1.8/bin:/opt/nginx/sbin
+# Setup:
+# echo 'source "${HOME}/Code/scripts/bash-profile"' >> ~/.bash_profile
+# ln -s "${HOME}/Code/scripts/gitconfig" ~/.gitconfig
+# ln -s "${HOME}/Code/scripts/keymap.cson" ~/.atom/keymap.cson
 
 # Set my editor and git editor
 export EDITOR="atom --wait"
 export GIT_EDITOR='atom --wait'
+
+# Use VI key bindings
+set -o vi
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
@@ -121,7 +127,7 @@ export PATH=/usr/local/bin:$PATH #Homebrew
 
 # Hate typing grailsw or gradlew all the time wrongly.
 function g(){
-  if [ -e gradlew ]
+  if [ -e grailsw ]
   then
     ./grailsw $@
   fi
@@ -135,13 +141,6 @@ function g(){
 function c() {
   ceedling $@
 }
-
-# Git branch in prompt.
-parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-
-export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 # Git Alias from bash it
 alias gcl='git clone'
@@ -191,6 +190,12 @@ export NVM_DIR="/Users/tgsoverly/.nvm"
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+# brew install bash_completion
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+GIT_PS1_SHOWDIRTYSTATE=true
+#export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
+export PS1='\e[92m\u\e[0m \w$(__git_ps1)\$ '
 
 # Load versions and go to directory
 nvm use 6.9.1

@@ -1,0 +1,4 @@
+'atom-workspace atom-text-editor:not([mini])':
+  'shift-cmd-up':'editor:move-line-up'
+  'shift-cmd-down':'editor:move-line-down'
+  'shift-cmd-D':'editor:duplicate-lines'
