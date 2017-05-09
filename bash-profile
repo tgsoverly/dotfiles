@@ -13,10 +13,26 @@
 #  6. git -> brew
 #  7. bash-completion -> brew
 
-# Setup:
+#     Setup:
+# ---------------
 # echo 'source "${HOME}/Code/scripts/bash-profile"' >> ~/.bash_profile
-# ln -s "${HOME}/Code/scripts/gitconfig" ~/.gitconfig
-# ln -s "${HOME}/Code/scripts/keymap.cson" ~/.atom/keymap.cson
+# source ~/.bash_profile
+# create_symlinks
+#
+function create_symlinks() {
+  for D in `find ~/Library/Preferences -type d -name "IdeaIC*"`; do
+    mkdir -p "${D}/keymaps"
+    if [ ! -e "${D}/keymaps/keymap.xml" ]; then
+      ln -s "${HOME}/Code/scripts/keymap.xml" "${D}/keymaps/keymap.xml"
+    fi
+  done
+  if [ ! -e ~/.gitconfig ]; then
+    ln -s "${HOME}/Code/scripts/gitconfig" ~/.gitconfig
+  fi
+  if [ ! -e ~/.atom/keymap.cson ]; then
+    ln -s "${HOME}/Code/scripts/keymap.cson" ~/.atom/keymap.cson
+  fi
+}
 
 # Set my editor and git editor
 export EDITOR="atom --wait"
