@@ -127,9 +127,6 @@ alias megan='ssh root@198.199.64.196'
 alias motmot='ssh root@45.55.178.30'
 alias evospace='ssh -L 3306:localhose:3306 root@104.131.86.143'
 
-# kubernetes
-alias ku='kubectl'
-
 # color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;37m'
@@ -214,8 +211,8 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 # brew install bash_completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 GIT_PS1_SHOWDIRTYSTATE=true
-#export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
-export PS1='\e[92m\u\e[0m \w$(__git_ps1)\$ '
+GIT_PS1_SHOWCOLORHINTS=1
+PROMPT_COMMAND='__git_ps1 "\e[34m\u@\h\e[0m \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use 6.9.1
