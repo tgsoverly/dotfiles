@@ -117,6 +117,9 @@ alias g2='sdk use grails 2.4.3'
 # Gradle
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
 
+# grails
+export GRAILS_OPTS="-Xmx2048M -Dfile.encoding=UTF-8"
+
 # Text Editors
 alias atom-shell='/Applications/Utilities/Atom.app/Contents/MacOS/Atom'
 alias atom='/Applications/Atom.app/Contents/MacOS/Atom'
