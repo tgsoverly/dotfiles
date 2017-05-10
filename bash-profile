@@ -19,18 +19,22 @@
 # source ~/.bash_profile
 # create_symlinks
 #
+
+export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 function create_symlinks() {
+  echo "Linking config from ${SCRIPTS_DIR}"
   for D in `find ~/Library/Preferences -type d -name "IdeaIC*"`; do
     mkdir -p "${D}/keymaps"
     if [ ! -e "${D}/keymaps/keymap.xml" ]; then
-      ln -s "${HOME}/Code/scripts/keymap.xml" "${D}/keymaps/keymap.xml"
+      ln -s "${SCRIPTS_DIR}/keymap.xml" "${D}/keymaps/keymap.xml"
     fi
   done
   if [ ! -e ~/.gitconfig ]; then
-    ln -s "${HOME}/Code/scripts/gitconfig" ~/.gitconfig
+    ln -s "${SCRIPTS_DIR}/gitconfig" ~/.gitconfig
   fi
   if [ ! -e ~/.atom/keymap.cson ]; then
-    ln -s "${HOME}/Code/scripts/keymap.cson" ~/.atom/keymap.cson
+    ln -s "${SCRIPTS_DIR}/keymap.cson" ~/.atom/keymap.cson
   fi
 }
 
