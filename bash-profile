@@ -15,12 +15,16 @@
 
 #     Setup:
 # ---------------
+# This is the only directory dependent command, make sure that this points to the scripts folder
+# echo 'export ENV_HOME=true' >> ~/.bash_profile
+# echo 'export ENV_SPIDA=true' >> ~/.bash_profile
 # echo 'source "${HOME}/Code/scripts/bash-profile"' >> ~/.bash_profile
 # source ~/.bash_profile
 # create_symlinks
 #
 
 export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export CODE_DIR="$(dirname "${SCRIPTS_DIR}")"
 
 function create_symlinks() {
   echo "Linking config from ${SCRIPTS_DIR}"
@@ -49,11 +53,9 @@ set -o vi
 unset MAILCHECK
 
 alias sprof='source ~/.bash_profile'
-alias prof='atom ~/.bash_profile;atom ~/Code/scripts/bash-profile'
+alias prof="atom ~/.bash_profile;atom ${CODE_DIR}/scripts/bash-profile"
 
-alias code='cd ~/Code'
-alias evo="cd ~/Code/evo"
-alias ec="cd ~/Code/evo/grails-app/assets/client"
+alias code="cd ${CODE_DIR}"
 
 bind '"[A":history-search-backward'
 bind '"[B":history-search-forward'
@@ -118,17 +120,11 @@ alias g2='sdk use grails 2.4.3'
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
 
 # grails
-export GRAILS_OPTS="-Xmx2048M -Dfile.encoding=UTF-8"
+export GRAILS_OPTS="-Xmx2048M -XX:MaxPermSize=512m -Dfile.encoding=UTF-8"
 
 # Text Editors
 alias atom-shell='/Applications/Utilities/Atom.app/Contents/MacOS/Atom'
 alias atom='/Applications/Atom.app/Contents/MacOS/Atom'
-
-# Computers
-alias pi='ssh pi@overly.me'
-alias megan='ssh root@198.199.64.196'
-alias motmot='ssh root@45.55.178.30'
-alias evospace='ssh -L 3306:localhose:3306 root@104.131.86.143'
 
 # color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
@@ -147,14 +143,18 @@ export PATH=/usr/local/bin:$PATH #Homebrew
 
 # Hate typing grailsw or gradlew all the time wrongly.
 function g(){
-  if [ -e grailsw ]
-  then
-    ./grailsw $@
+  if [ -e grailsw ]; then
+    COMMAND=$1
+    if [[ $1 == "r" ]]; then COMMAND="run-app"; fi
+    if [[ $1 == "t" ]]; then COMMAND="test-app"; fi
+    ./grailsw -reloading -Ddeployment=spida/dev $COMMAND --non-interactive
   fi
 
-  if [ -e gradlew ]
-  then
-    ./gradlew $@
+  if [ -e gradlew ]; then
+    COMMAND=$1
+    if [[ $1 == "r" ]]; then COMMAND=":run"; fi
+    if [[ $1 == "t" ]]; then COMMAND=":test"; fi
+    ./gradlew $COMMAND
   fi
 }
 
@@ -197,6 +197,10 @@ alias ggs="gg --stat"
 alias gsl="git shortlog -sn"
 alias gw="git whatchanged"
 
+# Load different environment setups
+[[ "${ENV_HOME}" -eq "true" ]] && source "${SCRIPTS_DIR}/env-home.sh"
+[[ "${ENV_WORK}" -eq "true" ]] && source "${SCRIPTS_DIR}/env-work.sh"
+
 export SDKMAN_DIR="${HOME}/.sdkman"
 [[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
@@ -206,7 +210,7 @@ source "${HOME}/Applications/google-cloud-sdk/path.bash.inc"
 # The next line enables bash completion for gcloud.
 source "${HOME}/Applications/google-cloud-sdk/completion.bash.inc"
 
-export NVM_DIR="/Users/tgsoverly/.nvm"
+export NVM_DIR="${HOME}/.nvm"
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"

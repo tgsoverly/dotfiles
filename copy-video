@@ -1,4 +1,0 @@
-#!/bin/bash
-echo "usage: copy_video file-in-work-directory folder-in-videos"
-echo "$(pwd)/$1 pi@overly.me:/media/share/owncloud/family/files/videos/$2"
-scp "$(pwd)/$1" "pi@overly.me:/media/share/owncloud/family/files/videos/$2"
