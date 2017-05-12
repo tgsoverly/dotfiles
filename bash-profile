@@ -42,6 +42,44 @@ function create_symlinks() {
   fi
 }
 
+# https://apple.stackexchange.com/questions/4813/changing-modifier-keys-from-the-command-line
+# get the id: defaults -currentHost read -g
+function remap_windows_keyboard() {
+  KEYBOARD_ID=$1
+  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" '(
+        {
+            HIDKeyboardModifierMappingDst = 2;
+            HIDKeyboardModifierMappingSrc = 0;
+        },
+                {
+            HIDKeyboardModifierMappingDst = 3;
+            HIDKeyboardModifierMappingSrc = 4;
+        },
+                {
+            HIDKeyboardModifierMappingDst = 11;
+            HIDKeyboardModifierMappingSrc = 12;
+        },
+                {
+            HIDKeyboardModifierMappingDst = 4;
+            HIDKeyboardModifierMappingSrc = 3;
+        },
+                {
+            HIDKeyboardModifierMappingDst = 12;
+            HIDKeyboardModifierMappingSrc = 11;
+        }
+    )'
+}
+
+function remap_internal_keyboard() {
+  KEYBOARD_ID=$1
+  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" '(
+        {
+            HIDKeyboardModifierMappingDst = 2;
+            HIDKeyboardModifierMappingSrc = 0;
+        }
+    )'
+}
+
 # Set my editor and git editor
 export EDITOR="atom --wait"
 export GIT_EDITOR='atom --wait'
@@ -147,7 +185,7 @@ function g(){
     COMMAND=$1
     if [[ $1 == "r" ]]; then COMMAND="run-app"; fi
     if [[ $1 == "t" ]]; then COMMAND="test-app"; fi
-    ./grailsw -reloading -Ddeployment=spida/dev $COMMAND --non-interactive
+    ./grailsw -reloading -Ddeployment=spida/dev -Duser.name="spidaminapp" $COMMAND --non-interactive
   fi
 
   if [ -e gradlew ]; then
