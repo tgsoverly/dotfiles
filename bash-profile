@@ -30,16 +30,19 @@ function create_symlinks() {
   echo "Linking config from ${SCRIPTS_DIR}"
   for D in `find ~/Library/Preferences -type d -name "IdeaIC*"`; do
     mkdir -p "${D}/keymaps"
-    if [ ! -e "${D}/keymaps/keymap.xml" ]; then
-      ln -s "${SCRIPTS_DIR}/keymap.xml" "${D}/keymaps/keymap.xml"
+    if [ -e "${D}/keymaps/keymap.xml" ]; then
+      rm "${D}/keymaps/keymap.xml"
     fi
+    ln -s "${SCRIPTS_DIR}/keymap.xml" "${D}/keymaps/keymap.xml"
   done
-  if [ ! -e ~/.gitconfig ]; then
-    ln -s "${SCRIPTS_DIR}/gitconfig" ~/.gitconfig
+  if [ -e ~/.gitconfig ]; then
+    rm ~/.gitconfig
   fi
-  if [ ! -e ~/.atom/keymap.cson ]; then
-    ln -s "${SCRIPTS_DIR}/keymap.cson" ~/.atom/keymap.cson
+  ln -s "${SCRIPTS_DIR}/gitconfig" ~/.gitconfig
+  if [ -e ~/.atom/keymap.cson ]; then
+    rm ~/.atom/keymap.cson
   fi
+  ln -s "${SCRIPTS_DIR}/keymap.cson" ~/.atom/keymap.cson
 }
 
 # https://apple.stackexchange.com/questions/4813/changing-modifier-keys-from-the-command-line
@@ -254,7 +257,9 @@ export NVM_DIR="${HOME}/.nvm"
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # brew install bash_completion
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
+[ -f /usr/local/opt/git/etc/bash_completion.d/git-completion.bash ] && source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
+[ -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] && source /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWCOLORHINTS=1
 PROMPT_COMMAND='__git_ps1 "\e[34m\u@\h\e[0m \w" "\\\$ "'

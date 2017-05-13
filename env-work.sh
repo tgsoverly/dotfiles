@@ -21,3 +21,5 @@ export PATH=$PATH:"${CODE_DIR}/scripts/time-reporting/time-uploader"
 
 remap_windows_keyboard "1118-1821"
 remap_internal_keyboard "1452-610"
+
+alias spidasoftware="gcloud compute ssh toverly@spidasoftware-upgrade"
