@@ -30,18 +30,13 @@ function create_symlinks() {
   echo "Linking config from ${SCRIPTS_DIR}"
   for D in `find ~/Library/Preferences -type d -name "IdeaIC*"`; do
     mkdir -p "${D}/keymaps"
-    if [ -e "${D}/keymaps/keymap.xml" ]; then
-      rm "${D}/keymaps/keymap.xml"
-    fi
+    rm -f "${D}/keymaps/keymap.xml"
     ln -s "${SCRIPTS_DIR}/keymap.xml" "${D}/keymaps/keymap.xml"
   done
-  if [ -e ~/.gitconfig ]; then
-    rm ~/.gitconfig
-  fi
+  rm -f ~/.gitconfig
   ln -s "${SCRIPTS_DIR}/gitconfig" ~/.gitconfig
-  if [ -e ~/.atom/keymap.cson ]; then
-    rm ~/.atom/keymap.cson
-  fi
+
+  rm -f ~/.atom/keymap.cson
   ln -s "${SCRIPTS_DIR}/keymap.cson" ~/.atom/keymap.cson
 }
 
@@ -262,7 +257,8 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 [ -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] && source /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWCOLORHINTS=1
-PROMPT_COMMAND='__git_ps1 "\e[34m\u@\h\e[0m \w" "\\\$ "'
+# This prompt is nice, but it is causing issues with the cursor location
+# PROMPT_COMMAND='__git_ps1 "\e[34m\u@\h\e[0m \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use 6.9.1
