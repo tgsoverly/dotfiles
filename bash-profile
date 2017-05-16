@@ -44,38 +44,48 @@ function create_symlinks() {
 # get the id: defaults -currentHost read -g
 function remap_windows_keyboard() {
   KEYBOARD_ID=$1
-  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" '(
-        {
-            HIDKeyboardModifierMappingDst = 2;
-            HIDKeyboardModifierMappingSrc = 0;
-        },
-                {
-            HIDKeyboardModifierMappingDst = 3;
-            HIDKeyboardModifierMappingSrc = 4;
-        },
-                {
-            HIDKeyboardModifierMappingDst = 11;
-            HIDKeyboardModifierMappingSrc = 12;
-        },
-                {
-            HIDKeyboardModifierMappingDst = 4;
-            HIDKeyboardModifierMappingSrc = 3;
-        },
-                {
-            HIDKeyboardModifierMappingDst = 12;
-            HIDKeyboardModifierMappingSrc = 11;
-        }
-    )'
+  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>2</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>0</integer>
+</dict>' \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>3</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>4</integer>
+</dict>' \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>11</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>12</integer>
+</dict>' \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>4</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>3</integer>
+</dict>' \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>12</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>11</integer>
+</dict>'
 }
 
 function remap_internal_keyboard() {
   KEYBOARD_ID=$1
-  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" '(
-        {
-            HIDKeyboardModifierMappingDst = 2;
-            HIDKeyboardModifierMappingSrc = 0;
-        }
-    )'
+  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
+'<dict>
+    <key>HIDKeyboardModifierMappingDst</key>
+    <integer>2</integer>
+    <key>HIDKeyboardModifierMappingSrc</key>
+    <integer>0</integer>
+</dict>'
 }
 
 # Set my editor and git editor
@@ -257,8 +267,12 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 [ -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] && source /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWCOLORHINTS=1
-# This prompt is nice, but it is causing issues with the cursor location
-# PROMPT_COMMAND='__git_ps1 "\e[34m\u@\h\e[0m \w" "\\\$ "'
+
+# https://unix.stackexchange.com/questions/28827/why-is-my-bash-prompt-getting-bugged-when-i-browse-the-history
+# \[ and \] around parts that have zero display length
+# color = \e[##m
+# clear = \e[0m
+PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use 6.9.1
