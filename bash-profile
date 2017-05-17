@@ -124,7 +124,14 @@ set -o vi
 # Don't check mail when opening terminal.
 unset MAILCHECK
 
-alias sprof='source ~/.bash_profile'
+function sprof(){
+  pushd ${SCRIPTS_DIR}
+    git add .
+    git commit -m "automated commit bash-profile"
+    git push
+  popd
+  source ~/.bash_profile
+}
 alias eprof="atom ~/.bash_profile;atom ${CODE_DIR}/dotfiles/bash-profile"
 alias ehosts="atom /etc/hosts"
 
@@ -220,6 +227,7 @@ function g(){
     COMMAND=$1
     if [[ $1 == "r" ]]; then COMMAND="run-app"; fi
     if [[ $1 == "t" ]]; then COMMAND="test-app"; fi
+    if [[ $1 == "c" ]]; then COMMAND="clean"; fi
     ./grailsw -reloading -Ddeployment=spida/dev -Duser.name="spidaminapp" $COMMAND --non-interactive
   fi
 
@@ -227,6 +235,7 @@ function g(){
     COMMAND=$1
     if [[ $1 == "r" ]]; then COMMAND=":run"; fi
     if [[ $1 == "t" ]]; then COMMAND=":test"; fi
+    if [[ $1 == "c" ]]; then COMMAND=":clean"; fi
     ./gradlew $COMMAND
   fi
 }

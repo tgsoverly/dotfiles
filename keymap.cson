@@ -1,4 +1,9 @@
 'atom-workspace atom-text-editor:not([mini])':
-  'shift-cmd-up':'editor:move-line-up'
-  'shift-cmd-down':'editor:move-line-down'
-  'shift-cmd-D':'editor:duplicate-lines'
+    'shift-cmd-up':'editor:move-line-up'
+    'shift-cmd-down':'editor:move-line-down'
+    'shift-cmd-D':'editor:duplicate-lines'
+'atom-text-editor':
+    'cmd-b':'atom-beautify:beautify-editor'
+'.platform-darwin':
+    'fuzzy-finder:toggle-buffer-finder':'unset!'
+    'tree-view:toggle':'unset!'
