@@ -126,8 +126,9 @@ unset MAILCHECK
 
 function sprof(){
   pushd ${SCRIPTS_DIR}
+    git pull
     git add .
-    git commit -m "automated commit bash-profile"
+    git commit -m "automated commit bash-profile to keep computers in sync"
     git push
   popd
   source ~/.bash_profile
