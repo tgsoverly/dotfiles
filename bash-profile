@@ -12,6 +12,7 @@
 #  5. gcloud sdk -> download
 #  6. git -> brew
 #  7. bash-completion -> brew
+#  8. Seil
 
 #     Setup:
 # ---------------
@@ -47,7 +48,7 @@ function remap_windows_keyboard() {
   defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
 '<dict>
     <key>HIDKeyboardModifierMappingDst</key>
-    <integer>2</integer>
+    <integer>-1</integer>
     <key>HIDKeyboardModifierMappingSrc</key>
     <integer>0</integer>
 </dict>' \
@@ -82,10 +83,35 @@ function remap_internal_keyboard() {
   defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
 '<dict>
     <key>HIDKeyboardModifierMappingDst</key>
-    <integer>2</integer>
+    <integer>-1</integer>
     <key>HIDKeyboardModifierMappingSrc</key>
     <integer>0</integer>
 </dict>'
+}
+
+# Seil
+function remap_caps_lock() {
+  defaults write ~/Library/Preferences/org.pqrs.Seil.plist -array '<dict>
+  	<key>MigrationUtilitiesCurrentBundleIdentifer</key>
+  	<string>org.pqrs.Seil</string>
+  	<key>SUFeedURL</key>
+  	<string>https://pqrs.org/osx/karabiner/files/seil-appcast.xml</string>
+  	<key>SUHasLaunchedBefore</key>
+  	<true/>
+  	<key>SULastCheckTime</key>
+  	<date>2017-05-15T18:35:23Z</date>
+  	<key>isCheckUpdate</key>
+  	<true/>
+  	<key>kResumeAtLogin</key>
+  	<true/>
+  	<key>sysctl</key>
+  	<dict>
+  		<key>enable_capslock</key>
+  		<integer>1</integer>
+  		<key>keycode_capslock</key>
+  		<integer>53</integer>
+  	</dict>
+  </dict>'
 }
 
 # Set my editor and git editor
@@ -99,7 +125,8 @@ set -o vi
 unset MAILCHECK
 
 alias sprof='source ~/.bash_profile'
-alias prof="atom ~/.bash_profile;atom ${CODE_DIR}/scripts/bash-profile"
+alias eprof="atom ~/.bash_profile;atom ${CODE_DIR}/dotfiles/bash-profile"
+alias ehosts="atom /etc/hosts"
 
 alias code="cd ${CODE_DIR}"
 
@@ -156,7 +183,7 @@ alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, 
 # JAVA
 alias jv='java -version'
 export JAVA_HOME="${HOME}/.sdkman/candidates/java/current/"
-alias jv8="sdk use java 8u131"
+alias jv8="sdk use java 8u111"
 alias jv7="sdk use java 7u79"
 
 alias g3='sdk use grails 3.1.9'
@@ -184,7 +211,7 @@ export MANWIDTH=200
 
 # PATH
 export PATH=.:$PATH #Current directory
-export PATH=$PATH:"$HOME/Code/scripts" #other scripts under version control
+export PATH=$PATH:"$SCRIPTS_DIR" #other scripts under version control
 export PATH=/usr/local/bin:$PATH #Homebrew
 
 # Hate typing grailsw or gradlew all the time wrongly.
@@ -276,5 +303,5 @@ PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use 6.9.1
-echo "Y" | sdk use java 8u131
+echo "Y" | jv8
 code
