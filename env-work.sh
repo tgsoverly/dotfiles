@@ -31,7 +31,7 @@ remap_caps_lock
 
 alias spidasoftware="gcloud compute ssh toverly@spidasoftware-upgrade"
 
-alias rvin='rmf ${CODE_DIR}/results-viewer/tmp && cd ${CODE_DIR}/calc/webviews && g c && g install && cd ${CODE_DIR}/calc/calc && g c && g r'
+alias rvin='rm -rf ${CODE_DIR}/results-viewer/tmp && cd ${CODE_DIR}/calc/webviews && g c && g install && cd ${CODE_DIR}/calc/calc && g c && g r'
 
 function install_deps(){
   npm install ember-cli@2.11 -g
