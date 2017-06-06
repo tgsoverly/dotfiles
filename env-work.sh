@@ -25,6 +25,9 @@ export PATH=$PATH:"${CODE_DIR}/open-source/time-approver/lib"
 export PATH=$PATH:"${CODE_DIR}/open-source/time-harvester"
 export PATH=$PATH:"${CODE_DIR}/scripts/time-reporting/time-uploader"
 
+# Installed with brew
+export PHANTOMJS_BIN=/usr/local/bin/phantomjs
+
 remap_windows_keyboard "1118-1821"
 remap_internal_keyboard "1452-610"
 remap_caps_lock
@@ -37,5 +40,4 @@ function install_deps(){
   npm install ember-cli@2.11 -g
   npm install grunt -g
   npm install bower -g
-  npm install phantomjs -g
 }
