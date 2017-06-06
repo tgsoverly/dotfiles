@@ -24,6 +24,7 @@ export GRAILS_OPTS="-server -Xmx2048M -Xms768M -XX:PermSize=256m -XX:MaxPermSize
 export PATH=$PATH:"${CODE_DIR}/open-source/time-approver/lib"
 export PATH=$PATH:"${CODE_DIR}/open-source/time-harvester"
 export PATH=$PATH:"${CODE_DIR}/scripts/time-reporting/time-uploader"
+export PHANTOMJS_BIN="${HOME}/.nvm/versions/node/v${NODE_VERSION}/lib/node_modules/phantomjs"
 
 remap_windows_keyboard "1118-1821"
 remap_internal_keyboard "1452-610"
@@ -37,4 +38,5 @@ function install_deps(){
   npm install ember-cli@2.11 -g
   npm install grunt -g
   npm install bower -g
+  npm install phantomjs -g
 }

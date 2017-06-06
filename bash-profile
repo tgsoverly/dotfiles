@@ -24,6 +24,9 @@
 # create_symlinks
 #
 
+# versions
+export NODE_VERSION="6.9.1"
+
 export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export CODE_DIR="$(dirname "${SCRIPTS_DIR}")"
 
@@ -312,6 +315,6 @@ GIT_PS1_SHOWCOLORHINTS=1
 PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
 
 # Load versions and go to directory
-nvm use 6.9.1
+nvm use $NODE_VERSION
 echo "Y" | jv8
 code
