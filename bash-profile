@@ -123,6 +123,7 @@ export GIT_EDITOR='atom --wait'
 
 # Use VI key bindings
 set -o vi
+bind 'set show-mode-in-prompt on'
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
@@ -312,7 +313,7 @@ GIT_PS1_SHOWCOLORHINTS=1
 # \[ and \] around parts that have zero display length
 # color = \e[##m
 # clear = \e[0m
-PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \[\w\]" "\\\$ "'
+# PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use $NODE_VERSION
