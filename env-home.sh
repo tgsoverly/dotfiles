@@ -14,3 +14,5 @@ alias evospace='ssh -L 3306:localhose:3306 root@104.131.86.143'
 
 remap_internal_keyboard "1452-610"
 remap_caps_lock
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"

@@ -122,8 +122,9 @@ export EDITOR="atom --wait"
 export GIT_EDITOR='atom --wait'
 
 # Use VI key bindings
-set -o vi
-bind 'set show-mode-in-prompt on'
+# Use again when I figure out whey the git prompt makes the cursor funny
+# set -o vi
+# bind 'set show-mode-in-prompt on'
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
@@ -249,40 +250,7 @@ function c() {
   ceedling $@
 }
 
-# Git Alias from bash it
-alias gcl='git clone'
-alias ga='git add'
-alias gall='git add -A'
-alias gus='git reset HEAD'
-alias gm="git merge"
-alias get='git'
-alias gst='git status'
-alias gs='git status'
-alias gss='git status -s'
-alias gl='git pull'
-alias gpr='git pull --rebase'
-alias gpp='git pull && git push'
-alias gup='git fetch && git rebase'
-alias gp='git push'
-alias gpo='git push origin'
-alias gdv='git diff -w "$@" | vim -R -'
-alias gc='git commit -v'
-alias gca='git commit -v -a'
-alias gcm='git commit -v -m'
-alias gci='git commit --interactive'
-alias gb='git branch'
-alias gba='git branch -a'
-alias gcount='git shortlog -sn'
-alias gcp='git cherry-pick'
-alias gco='git checkout'
-alias gexport='git archive --format zip --output'
-alias gdel='git branch -D'
-alias gmu='git fetch origin -v; git fetch upstream -v; git merge upstream/master'
-alias gll='git log --graph --pretty=oneline --abbrev-commit'
-alias gg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-alias ggs="gg --stat"
-alias gsl="git shortlog -sn"
-alias gw="git whatchanged"
+source "${SCRIPTS_DIR}/aliases.sh"
 
 # Load different environment setups
 [[ "${ENV_HOME}" -eq "true" ]] && source "${SCRIPTS_DIR}/env-home.sh"
@@ -313,7 +281,7 @@ GIT_PS1_SHOWCOLORHINTS=1
 # \[ and \] around parts that have zero display length
 # color = \e[##m
 # clear = \e[0m
-# PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
+PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
 
 # Load versions and go to directory
 nvm use $NODE_VERSION

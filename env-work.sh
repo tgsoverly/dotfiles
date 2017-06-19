@@ -1,43 +1,27 @@
 #!/usr/bin/env bash
 #
-# Specfic aliases and commands for my SPIDA environments
-export ARTIFACTORY_USERNAME="developer"
-export ARTIFACTORY_URL_BASE="https://dev.spidasoftware.com/artifactory"
-export ARTIFACTORY_URL="${ARTIFACTORY_URL_BASE}/maven-repo"
-export ARTIFACTORY_URL_EXPOSED="${ARTIFACTORY_URL_BASE}/exposed-repo"
-export SPIDA_HOME="${HOME}/Library/Application Support/SPIDA/"
+# Specfic aliases and commands for my ROOT environments
+alias jobs="env TERM_CHILD=1 bundle exec rake resque:work COUNT=1 QUEUE=*"
+alias rs="bundle exec rails s -b 0.0.0.0"
+alias mig="bin/rake db:migrate"
+alias ecrlogin=`aws ecr --no-include-emai get-login`
+alias ealias="atom ${HOME}/code/dotfiles/aliases.sh"
+alias eprof="atom ~/.my_profile"
+alias sprof="source ${HOME}/.bashrc"
 
-launchctl setenv SPIDA_HOME "$SPIDA_HOME",
-launchctl setenv ARTIFACTORY_PASSWORD $ARTIFACTORY_PASSWORD
-launchctl setenv ARTIFACTORY_USERNAME $ARTIFACTORY_USERNAME
-launchctl setenv ARTIFACTORY_URL_BASE $ARTIFACTORY_URL_BASE
-launchctl setenv ARTIFACTORY_URL $ARTIFACTORY_URL
-launchctl setenv ARTIFACTORY_URL_EXPOSED $ARTIFACTORY_URL_EXPOSED
+alias android-referrer="echo 'am broadcast -a com.android.vending.INSTALL_REFERRER -n \"com.joinroot.root/com.jdc.reactlibrary.ReferrerReceiver\" --es \"referrer\" \"utm_source=test_source&utm_medium=test_medium&utm_term=test_term&utm_content=test_content&utm_campaign=test_name\"; exit' | adb shell"
+alias econfig='atom ~/code/dotfiles ~/code/dev-box'
 
-export HARVEST_SUBDOMAIN='spidasoftware'
-export HARVEST_EMAIL='timothy.overly@spidasoftware.com'
+export RBENV_VERSION=''
 
-export CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:+CMSClassUnloadingEnabled -XX:PermSize=512m"
-export JAVA_OPTS="-Xms128m -Xmx1024m"
-export GRAILS_OPTS="-server -Xmx2048M -Xms768M -XX:PermSize=256m -XX:MaxPermSize=512m -Dfile.encoding=UTF-8"
+function lint(){
+  if [ -e .eslintrc.json ]; then
+    yarn lint
+  fi
 
-export PATH=$PATH:"${CODE_DIR}/open-source/time-approver/lib"
-export PATH=$PATH:"${CODE_DIR}/open-source/time-harvester"
-export PATH=$PATH:"${CODE_DIR}/scripts/time-reporting/time-uploader"
-
-# Installed with brew
-export PHANTOMJS_BIN=/usr/local/bin/phantomjs
-
-remap_windows_keyboard "1118-1821"
-remap_internal_keyboard "1452-610"
-remap_caps_lock
-
-alias spidasoftware="gcloud compute ssh toverly@spidasoftware-upgrade"
-
-alias rvin='rm -rf ${CODE_DIR}/results-viewer/tmp && cd ${CODE_DIR}/calc/webviews && g c && g install && cd ${CODE_DIR}/calc/calc && g c && g r'
-
-function install_deps(){
-  npm install ember-cli@2.11 -g
-  npm install grunt -g
-  npm install bower -g
+  if [ -e .rubocop.yml ]; then
+    be rake rubocop
+  fi
 }
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
