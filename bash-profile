@@ -1,49 +1,5 @@
 #!/usr/bin/env bash
 
-#
-# This file is loaded from the .bash_profile in ~, but is under version control
-# to make it easy to setup new computers like I like it.
-#
-# The computer must have the following items installed to make this file work:
-#  1. iterm2 -> download
-#  2. atom editor -> download
-#  3. sdkman -> bash script
-#  4. nvm -> bash script
-#  5. gcloud sdk -> download
-#  6. git -> brew
-#  7. bash-completion -> brew
-#  8. Seil
-
-#     Setup:
-# ---------------
-# This is the only directory dependent command, make sure that this points to the scripts folder
-# echo 'export ENV_HOME=true' >> ~/.bash_profile
-# echo 'export ENV_SPIDA=true' >> ~/.bash_profile
-# echo 'source "${HOME}/Code/scripts/bash-profile"' >> ~/.bash_profile
-# source ~/.bash_profile
-# create_symlinks
-#
-
-# versions
-export NODE_VERSION="6.9.1"
-
-export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export CODE_DIR="$(dirname "${SCRIPTS_DIR}")"
-
-function create_symlinks() {
-  echo "Linking config from ${SCRIPTS_DIR}"
-  for D in `find ~/Library/Preferences -type d -name "IdeaIC*"`; do
-    mkdir -p "${D}/keymaps"
-    rm -f "${D}/keymaps/keymap.xml"
-    ln -s "${SCRIPTS_DIR}/keymap.xml" "${D}/keymaps/keymap.xml"
-  done
-  rm -f ~/.gitconfig
-  ln -s "${SCRIPTS_DIR}/gitconfig" ~/.gitconfig
-
-  rm -f ~/.atom/keymap.cson
-  ln -s "${SCRIPTS_DIR}/keymap.cson" ~/.atom/keymap.cson
-}
-
 # https://apple.stackexchange.com/questions/4813/changing-modifier-keys-from-the-command-line
 # get the id: defaults -currentHost read -g
 function remap_windows_keyboard() {
@@ -117,9 +73,11 @@ function remap_caps_lock() {
   </dict>'
 }
 
+export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Set my editor and git editor
-export EDITOR="atom --wait"
-export GIT_EDITOR='atom --wait'
+export EDITOR="nvim"
+export GIT_EDITOR='nvim'
 
 # Use VI key bindings
 # Use again when I figure out whey the git prompt makes the cursor funny
@@ -129,19 +87,9 @@ export GIT_EDITOR='atom --wait'
 # Don't check mail when opening terminal.
 unset MAILCHECK
 
-function sprof(){
-  pushd ${SCRIPTS_DIR}
-    git pull
-    git add .
-    git commit -m "automated commit bash-profile to keep computers in sync"
-    git push
-  popd
-  source ~/.bash_profile
-}
-alias eprof="atom ~/.bash_profile;atom ${CODE_DIR}/dotfiles/bash-profile"
-alias ehosts="atom /etc/hosts"
-
-alias code="cd ${CODE_DIR}"
+# Edit common files
+alias econfig="nvim ~"
+alias ehosts="nvim /etc/hosts"
 
 bind '"[A":history-search-backward'
 bind '"[B":history-search-forward'
@@ -166,10 +114,6 @@ alias docker-prune='docker rmi $(docker images -f "dangling=true" -q)'
 PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
 export PATH=$PATH:$HOME/Applications
 
-# size
-alias size10='find . -type d -print0 | xargs -0 du -s | sort -n | tail -10 | cut -f2 | xargs -I{} du -sh {}'
-
-# FOLDER
 alias ~='cd ~'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -180,6 +124,41 @@ alias lsc='ls -C'
 alias lsf='ls -la | grep ^-'  #files only
 alias lsd='ls -la | grep ^d'  #dirs only
 alias rds="find . -name '*.DS_Store' -type f -delete"
+alias ip='ifconfig | grep "inet "'
+alias size10='find . -type d -print0 | xargs -0 du -s | sort -n | tail -10 | cut -f2 | xargs -I{} du -sh {}'
+
+
+# Git Alias from bash it
+alias gcl='git clone'
+alias ga='git add'
+alias gall='git add -A'
+alias gus='git reset HEAD'
+alias gm="git merge"
+alias get='git'
+alias gst='git status'
+alias gs='git status'
+alias gss='git status -s'
+alias gl='git pull'
+alias gpr='git pull --rebase'
+alias gp='git push'
+alias gpr='git fetch --prune'
+alias gpo='git push origin'
+alias gcm='git checkout master'
+alias gci='git commit --interactive'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcount='git shortlog -sn'
+alias gcp='git cherry-pick'
+alias gco='git checkout'
+alias gexport='git archive --format zip --output'
+alias gdel='git branch -D'
+alias gmu='git fetch origin -v; git fetch upstream -v; git merge upstream/master'
+alias ggs="gg --stat"
+alias gsl="git shortlog -sn"
+alias gw="git whatchanged"
+alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gaa="git add .;get commit --amend --no-edit"
+alias gaap="git add .;get commit --amend --no-edit;git push -f"
 
 # Mouse
 alias fastmouse='defaults write -g com.apple.mouse.scaling 17'
@@ -194,23 +173,10 @@ alias hosts='s /private/etc/hosts'
 alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, only prints response headers and time it took.
 
 # JAVA
-alias jv='java -version'
 export JAVA_HOME="${HOME}/.sdkman/candidates/java/current/"
-alias jv8="sdk use java 8u111"
-alias jv7="sdk use java 7u79"
-
-alias g3='sdk use grails 3.1.9'
-alias g2='sdk use grails 2.4.3'
 
 # Gradle
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
-
-# grails
-export GRAILS_OPTS="-Xmx2048M -XX:MaxPermSize=512m -Dfile.encoding=UTF-8"
-
-# Text Editors
-alias atom-shell='/Applications/Utilities/Atom.app/Contents/MacOS/Atom'
-alias atom='/Applications/Atom.app/Contents/MacOS/Atom'
 
 # color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
@@ -227,63 +193,10 @@ export PATH=.:$PATH #Current directory
 export PATH=$PATH:"$SCRIPTS_DIR" #other scripts under version control
 export PATH=/usr/local/bin:$PATH #Homebrew
 
-# Hate typing grailsw or gradlew all the time wrongly.
-function g(){
-  if [ -e grailsw ]; then
-    COMMAND=$1
-    if [[ $1 == "r" ]]; then COMMAND="run-app"; fi
-    if [[ $1 == "t" ]]; then COMMAND="test-app"; fi
-    if [[ $1 == "c" ]]; then COMMAND="clean"; fi
-    ./grailsw -reloading -Ddeployment=spida/dev -Duser.name="spidaminapp" $COMMAND --non-interactive
-  fi
-
-  if [ -e gradlew ]; then
-    COMMAND=$1
-    if [[ $1 == "r" ]]; then COMMAND=":run"; fi
-    if [[ $1 == "t" ]]; then COMMAND=":test"; fi
-    if [[ $1 == "c" ]]; then COMMAND=":clean"; fi
-    ./gradlew $COMMAND
-  fi
-}
-
-function c() {
-  ceedling $@
-}
-
-source "${SCRIPTS_DIR}/aliases.sh"
-
 # Load different environment setups
-[[ "${ENV_HOME}" -eq "true" ]] && source "${SCRIPTS_DIR}/env-home.sh"
-[[ "${ENV_WORK}" -eq "true" ]] && source "${SCRIPTS_DIR}/env-work.sh"
-
-export SDKMAN_DIR="${HOME}/.sdkman"
-[[ -s "${HOME}/.sdkman/bin/sdkman-init.sh" ]] && source "${HOME}/.sdkman/bin/sdkman-init.sh"
-
-# The next line updates PATH for the Google Cloud SDK.
-source "${HOME}/Applications/google-cloud-sdk/path.bash.inc"
-
-# The next line enables bash completion for gcloud.
-source "${HOME}/Applications/google-cloud-sdk/completion.bash.inc"
-
-export NVM_DIR="${HOME}/.nvm"
-[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"  # This loads nvm
-
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
-
-# brew install bash_completion
-[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
-[ -f /usr/local/opt/git/etc/bash_completion.d/git-completion.bash ] && source /usr/local/opt/git/etc/bash_completion.d/git-completion.bash
-[ -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] && source /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
-GIT_PS1_SHOWDIRTYSTATE=true
-GIT_PS1_SHOWCOLORHINTS=1
-
-# https://unix.stackexchange.com/questions/28827/why-is-my-bash-prompt-getting-bugged-when-i-browse-the-history
-# \[ and \] around parts that have zero display length
-# color = \e[##m
-# clear = \e[0m
-PROMPT_COMMAND='__git_ps1 "\[\e[94m\]\u@\h\[\e[0m\] \w" "\\\$ "'
-
-# Load versions and go to directory
-nvm use $NODE_VERSION
-echo "Y" | jv8
-code
+if [ "$ENV_HOME" = "true" ]; then
+  source "${SCRIPTS_DIR}/env-home.sh"
+fi
+if [ "$ENV_WORK" = "true" ]; then
+  source "${SCRIPTS_DIR}/env-work.sh"
+fi
