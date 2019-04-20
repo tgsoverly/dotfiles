@@ -1,42 +1,5 @@
 #!/usr/bin/env bash
 
-# https://apple.stackexchange.com/questions/4813/changing-modifier-keys-from-the-command-line
-# get the id: defaults -currentHost read -g
-function remap_windows_keyboard() {
-  KEYBOARD_ID=$1
-  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>-1</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>0</integer>
-</dict>' \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>3</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>4</integer>
-</dict>' \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>11</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>12</integer>
-</dict>' \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>4</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>3</integer>
-</dict>' \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>12</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>11</integer>
-</dict>'
-}
-
 function remap_internal_keyboard() {
   KEYBOARD_ID=$1
   defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
@@ -171,9 +134,6 @@ export PATH=$PATH:$GOPATH/bin
 alias openports='sudo lsof -i -P | grep -i "listen"'
 alias hosts='s /private/etc/hosts'
 alias h='curl -sIX GET -w "Total time: %{time_total} s\n"' #issues GET request, only prints response headers and time it took.
-
-# JAVA
-export JAVA_HOME="${HOME}/.sdkman/candidates/java/current/"
 
 # Gradle
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"

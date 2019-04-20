@@ -15,12 +15,13 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'michaeljsmith/vim-indent-object', {'tag': '1.1.2'}
   Plug 'mileszs/ack.vim', {'tag': '1.0.9'}
   Plug 'pangloss/vim-javascript', {'commit': 'a87c9443'}
+  Plug 'posva/vim-vue'
   Plug 'scrooloose/nerdtree', {'tag': '5.0.0'}
   Plug 'tommcdo/vim-exchange', {'commit': '05d82b8'}
   Plug 'tomtom/tcomment_vim', {'tag': '3.08'}
   Plug 'tpope/vim-endwise', {'commit': '0067ced'}
   Plug 'tpope/vim-fugitive', {'tag': 'v2.2'}
-  Plug 'tpope/vim-surround', {'tag': 'v2.1'}
+  Plug 'tpope/vim-surround'
   Plug 'vim-airline/vim-airline', {'tag': 'v0.8'}
   Plug 'vim-airline/vim-airline-themes', {'commit': '13bad30'}
   Plug 'vim-scripts/argtextobj.vim', {'tag': '1.1.1'}
@@ -42,6 +43,8 @@ set completeopt+=menuone
 set shortmess+=c
 set completeopt+=noselect
 set gdefault
+set foldlevelstart=20
+set foldmethod=indent
 
 autocmd BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 autocmd BufNewFile,BufRead *.txt setlocal spell spelllang=en_us
@@ -67,7 +70,7 @@ imap <C-L> <SPACE>=><SPACE>
 nmap <silent> <LocalLeader>ff :CtrlP<CR>
 nmap <silent> <LocalLeader>gw :Ggrep <cword><CR>
 nmap <silent> <LocalLeader>na :ALEToggle<CR>
-nmap <silent> <LocalLeader>nf :NERDTreeFind<CR>
+nmap <silent> <LocalLeader>nf :NERDTreeFind<CR> | :vertical resize 60<CR>
 nmap <silent> <LocalLeader>nh :nohls<CR>
 nmap <silent> <LocalLeader>nt :NERDTreeToggle<CR>
 nmap <silent> <LocalLeader>n<SPACE> :highlight clear ExtraWhitespace<CR>
@@ -149,6 +152,8 @@ let g:ale_set_higlights = 1
 
 " ale fixers
 let g:ale_fix_on_save = 1
+let g:ale_linter_aliases = {'vue': ['vue', 'javascript']}
+let g:ale_linters = {'vue': ['eslint']}
 let g:ale_fixers = {
       \  '*': [
       \   'remove_trailing_lines',
@@ -157,10 +162,15 @@ let g:ale_fixers = {
       \  'javascript': [
       \   'eslint',
       \  ],
+      \  'vue': [
+      \   'eslint',
+      \  ],
       \  'ruby': [
       \   'rubocop',
       \  ],
       \}
+
+let g:ale_ruby_rubocop_executable = 'bundle'
 
 " Allow switching to buffer #<n> by typing <n>e
 let g:buftabline_numbers = 2
@@ -187,4 +197,42 @@ let g:NERDTreeWinSize=60
 " faster fzf fuzzy find respecting gitignore
 let $FZF_DEFAULT_COMMAND = '(git ls-tree -r --name-only HEAD || find . -path "*/\.*" -prune -o -type f -print -o -type l -print | sed s/^..//) 2> /dev/null'
 
-" ###### PERSONAL CONFIG ######
+nnoremap <leader>ls :OpenSpecInSplit<cr>
+
+fun! OpenFilesInSplit(left, right)
+  if a:left == a:right
+    return
+  endif
+
+  only
+  exec "edit " . a:left
+  exec "vs " . a:right
+  execute "normal! \<c-w>t"
+endfun
+
+fun! OpenSpecInSplit()
+  let file = expand('%:p')
+
+  if match(file, "app/") >= 0
+    let f1 = substitute(file, "\\.rb", "_spec.rb", "")
+    let f2 = substitute(f1, "app\\/", "spec/", "")
+    call OpenFilesInSplit(f2, file)
+    exec "w"
+  elseif match(file, "spec/") >= 0
+    let f1 = substitute(file, "\_spec", "", "")
+    let f2 = substitute(f1, "spec/", "app/", "")
+    call OpenFilesInSplit(file, f2)
+    exec "w"
+  elseif match(file, "src") >= 0
+    let f1 = substitute(file, "\\.js", "-test.js", "")
+    let f2 = substitute(f1, "src\\/", "test/", "")
+    call OpenFilesInSplit(f2, file)
+    exec "w"
+  elseif match(file, "test") >= 0
+    let f1 = substitute(file, "\\-test.js", ".js", "")
+    let f2 = substitute(f1, "test\\/", "src/", "")
+    call OpenFilesInSplit(file, f2)
+    exec "w"
+  endif
+endfun
+com! OpenSpecInSplit :call OpenSpecInSplit()
