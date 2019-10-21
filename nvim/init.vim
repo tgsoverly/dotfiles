@@ -4,18 +4,19 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'christoomey/vim-sort-motion'
   Plug 'ctrlpvim/ctrlp.vim', {'tag': '1.79'}
   Plug 'farmergreg/vim-lastplace', {'tag': 'v3.1.0'}
-  Plug 'janko-m/vim-test', {'commit': 'ee2b01e'}
+  Plug 'janko-m/vim-test'
   Plug 'jlanzarotta/bufexplorer'
   Plug 'jtratner/vim-flavored-markdown', {'commit': '4a70aa2'}
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
-  Plug 'kassio/neoterm', {'commit': '0a7a958'}
+  Plug 'kassio/neoterm'
   Plug 'lifepillar/vim-mucomplete'
   Plug 'majutsushi/tagbar', {'commit': 'bef1fa4'}
   Plug 'michaeljsmith/vim-indent-object', {'tag': '1.1.2'}
+  Plug 'milch/vim-fastlane'
   Plug 'mileszs/ack.vim', {'tag': '1.0.9'}
   Plug 'pangloss/vim-javascript', {'commit': 'a87c9443'}
-  Plug 'posva/vim-vue'
+  Plug 'leafOfTree/vim-vue-plugin'
   Plug 'scrooloose/nerdtree', {'tag': '5.0.0'}
   Plug 'tommcdo/vim-exchange', {'commit': '05d82b8'}
   Plug 'tomtom/tcomment_vim', {'tag': '3.08'}
@@ -75,9 +76,9 @@ nmap <silent> <LocalLeader>nh :nohls<CR>
 nmap <silent> <LocalLeader>nt :NERDTreeToggle<CR>
 nmap <silent> <LocalLeader>n<SPACE> :highlight clear ExtraWhitespace<CR>
 nmap <silent> <LocalLeader><SPACE> :highlight ExtraWhitespace ctermbg=red guibg=red<CR>
-nmap <silent> <LocalLeader>rb :wa <bar> :TestFile<CR>
-nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest<CR>
-nmap <silent> <LocalLeader>rl :wa <bar> :TestLast<CR>
+nmap <silent> <LocalLeader>rb :wa <bar> :TestFile -strategy=neoterm<CR>
+nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest -strategy=neoterm<CR>
+nmap <silent> <LocalLeader>rl :wa <bar> :TestLast -strategy=neoterm<CR>
 nmap <silent> <LocalLeader>tt :TagbarToggle<CR>
 nmap <silent> <LocalLeader>tf :TagbarOpen fj<CR>
 nmap <silent> <LocalLeader>tc :TagbarClose<CR>
@@ -105,16 +106,21 @@ nnoremap <C-]> :bnext<CR>
 inoremap kj <Esc>
 tnoremap <Esc> <C-\><C-n>
 
+let g:neoterm_default_mod = 'rightbelow'
 let g:neoterm_size = '20'
 let g:test#custom_transformations = {'clear': function('ClearTerminalTransform')}
 let g:test#transformation = 'clear'
-let test#strategy = 'neoterm'
 
 " Allows Ctrl-P to find hidden files like .env
 let g:ctrlp_show_hidden = 1
 
+function! YarnStrategy(cmd)
+  echo 'It works! Command for running tests: ' . a:cmd
+endfunction
+
 " Allows mocha tests for RN to run in nvim
-let test#javascript#mocha#options = '--require test/setup-tests.js'
+let test#javascript#mocha#executable = 'yarn test:single'
+let test#javascript#jest#options = '--runInBand'
 
 " File and folder CtrlP exclusions. See https://github.com/kien/ctrlp.vim
 let g:ctrlp_custom_ignore = {
@@ -168,6 +174,9 @@ let g:ale_fixers = {
       \  'ruby': [
       \   'rubocop',
       \  ],
+      \  'Fastfile': [
+      \   'rubocop',
+      \  ],
       \}
 
 let g:ale_ruby_rubocop_executable = 'bundle'
@@ -210,29 +219,28 @@ fun! OpenFilesInSplit(left, right)
   execute "normal! \<c-w>t"
 endfun
 
+fun! HandleOpenTestInSplit(file, extention_regex, extention_replace, path_regex, path_replace)
+  let f1 = substitute(a:file, a:extention_regex, a:extention_replace, "")
+  let f2 = substitute(f1, a:path_regex, a:path_replace, "")
+  call OpenFilesInSplit(f2, a:file)
+  exec "w"
+endfun
+
 fun! OpenSpecInSplit()
   let file = expand('%:p')
 
-  if match(file, "app/") >= 0
-    let f1 = substitute(file, "\\.rb", "_spec.rb", "")
-    let f2 = substitute(f1, "app\\/", "spec/", "")
-    call OpenFilesInSplit(f2, file)
-    exec "w"
+  if match(file, "app/javascript/packs/claims_dashboard") >= 0
+    call HandleOpenTestInSplit(file,"\\.vue", "-test.js","/packs\\/", "/test/")
+  elseif match(file, "app/javascript/test/claims_dashboard") >= 0
+    call HandleOpenTestInSplit(file,"\\-test.js", ".vue","test\\/", "packs/")
+  elseif match(file, "app/") >= 0
+    call HandleOpenTestInSplit(file,"\\.rb", "_spec.rb","app\\/", "spec/")
   elseif match(file, "spec/") >= 0
-    let f1 = substitute(file, "\_spec", "", "")
-    let f2 = substitute(f1, "spec/", "app/", "")
-    call OpenFilesInSplit(file, f2)
-    exec "w"
+    call HandleOpenTestInSplit(file,"\_spec", "","spec/", "app/")
   elseif match(file, "src") >= 0
-    let f1 = substitute(file, "\\.js", "-test.js", "")
-    let f2 = substitute(f1, "src\\/", "test/", "")
-    call OpenFilesInSplit(f2, file)
-    exec "w"
+    call HandleOpenTestInSplit(file,"\\.js", "-test.js","src\\/", "test/")
   elseif match(file, "test") >= 0
-    let f1 = substitute(file, "\\-test.js", ".js", "")
-    let f2 = substitute(f1, "test\\/", "src/", "")
-    call OpenFilesInSplit(file, f2)
-    exec "w"
+    call HandleOpenTestInSplit(file,"\\-test.js", ".js","test\\/", "src/")
   endif
 endfun
 com! OpenSpecInSplit :call OpenSpecInSplit()
