@@ -33,6 +33,8 @@ rm ~/.tmux.conf
 ln -s ~/code/dotfiles/nvim/ ~/.config/nvim
 ln -s ~/code/dotfiles/tmux.conf ~/.tmux.conf
 
+export PATH=/usr/local/opt/python/libexec/bin:$PATH
+
 nvm use default --silent
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
