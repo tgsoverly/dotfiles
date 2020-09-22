@@ -1,32 +1,34 @@
 call plug#begin('~/.config/nvim/plugged')
+  Plug 'Shougo/deoplete.nvim'
   Plug 'ap/vim-buftabline'
-  Plug 'chaoren/vim-wordmotion', {'commit': '23fc891'}
+  Plug 'chaoren/vim-wordmotion'
   Plug 'christoomey/vim-sort-motion'
-  Plug 'ctrlpvim/ctrlp.vim', {'tag': '1.79'}
-  Plug 'farmergreg/vim-lastplace', {'tag': 'v3.1.0'}
+  Plug 'farmergreg/vim-lastplace'
   Plug 'janko-m/vim-test'
   Plug 'jlanzarotta/bufexplorer'
-  Plug 'jtratner/vim-flavored-markdown', {'commit': '4a70aa2'}
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'jtratner/vim-flavored-markdown'
+  Plug 'junegunn/fzf'
   Plug 'junegunn/fzf.vim'
   Plug 'kassio/neoterm'
-  Plug 'lifepillar/vim-mucomplete'
-  Plug 'majutsushi/tagbar', {'commit': 'bef1fa4'}
-  Plug 'michaeljsmith/vim-indent-object', {'tag': '1.1.2'}
-  Plug 'milch/vim-fastlane'
-  Plug 'mileszs/ack.vim', {'tag': '1.0.9'}
-  Plug 'pangloss/vim-javascript', {'commit': 'a87c9443'}
   Plug 'leafOfTree/vim-vue-plugin'
-  Plug 'scrooloose/nerdtree', {'tag': '5.0.0'}
-  Plug 'tommcdo/vim-exchange', {'commit': '05d82b8'}
-  Plug 'tomtom/tcomment_vim', {'tag': '3.08'}
-  Plug 'tpope/vim-endwise', {'commit': '0067ced'}
-  Plug 'tpope/vim-fugitive', {'tag': 'v2.2'}
+  Plug 'majutsushi/tagbar'
+  Plug 'michaeljsmith/vim-indent-object'
+  Plug 'milch/vim-fastlane'
+  Plug 'mileszs/ack.vim'
+  Plug 'pangloss/vim-javascript'
+  Plug 'roman/golden-ratio'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+  Plug 'scrooloose/nerdtree'
+  Plug 'tommcdo/vim-exchange'
+  Plug 'tomtom/tcomment_vim'
+  Plug 'tpope/vim-endwise'
+  Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-surround'
-  Plug 'vim-airline/vim-airline', {'tag': 'v0.8'}
-  Plug 'vim-airline/vim-airline-themes', {'commit': '13bad30'}
-  Plug 'vim-scripts/argtextobj.vim', {'tag': '1.1.1'}
-  Plug 'w0rp/ale'
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  Plug 'vim-scripts/argtextobj.vim'
+  Plug 'dense-analysis/ale'
 call plug#end()
 
 set dir=/tmp//
@@ -40,9 +42,7 @@ set smartcase
 set textwidth=0 nosmartindent tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 set undofile
 set clipboard=unnamed
-set completeopt+=menuone
 set shortmess+=c
-set completeopt+=noselect
 set gdefault
 set foldlevelstart=20
 set foldmethod=indent
@@ -68,17 +68,17 @@ colorscheme Tomorrow-Night
 
 imap <C-L> <SPACE>=><SPACE>
 
-nmap <silent> <LocalLeader>ff :CtrlP<CR>
-nmap <silent> <LocalLeader>gw :Ggrep <cword><CR>
-nmap <silent> <LocalLeader>na :ALEToggle<CR>
+nnoremap <silent> <C-J> <C-W><C-J>
+nnoremap <silent> <C-K> <C-W><C-K>
+nnoremap <silent> <C-L> <C-W><C-L>
+nnoremap <silent> <C-H> <C-W><C-H>
 nmap <silent> <LocalLeader>nf :NERDTreeFind<CR> | :vertical resize 60<CR>
 nmap <silent> <LocalLeader>nh :nohls<CR>
 nmap <silent> <LocalLeader>nt :NERDTreeToggle<CR>
-nmap <silent> <LocalLeader>n<SPACE> :highlight clear ExtraWhitespace<CR>
-nmap <silent> <LocalLeader><SPACE> :highlight ExtraWhitespace ctermbg=red guibg=red<CR>
-nmap <silent> <LocalLeader>rb :wa <bar> :TestFile -strategy=neoterm<CR>
-nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest -strategy=neoterm<CR>
-nmap <silent> <LocalLeader>rl :wa <bar> :TestLast -strategy=neoterm<CR>
+
+nmap <silent> <LocalLeader>rb :wa <bar> :TestFile -strategy=neovim<CR>
+nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest -strategy=neovim<CR>
+nmap <silent> <LocalLeader>rl :wa <bar> :TestLast -strategy=neovim<CR>
 nmap <silent> <LocalLeader>tt :TagbarToggle<CR>
 nmap <silent> <LocalLeader>tf :TagbarOpen fj<CR>
 nmap <silent> <LocalLeader>tc :TagbarClose<CR>
@@ -88,6 +88,9 @@ nnoremap <LocalLeader># :keepjumps normal! *#<CR>
 
 " remove whitespace
 nnoremap <LocalLeader>W :%s/\s\+$//<cr>:let @/=''<CR>
+"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 let g:exchange_no_mappings=1
 nmap <silent> cx <Plug>(Exchange)
@@ -104,7 +107,7 @@ nnoremap <C-[> :bprev<CR>
 nnoremap <C-]> :bnext<CR>
 
 inoremap kj <Esc>
-tnoremap <Esc> <C-\><C-n>
+tmap <C-o> <C-\><C-n>
 
 let g:neoterm_default_mod = 'rightbelow'
 let g:neoterm_size = '20'
@@ -135,15 +138,17 @@ let g:wordmotion_mappings = {
 " Sort tags in order of appearance by default
 let g:tagbar_sort = 0
 
-let g:mucomplete#enable_auto_at_startup = 1
+let g:deoplete#enable_at_startup = 1
 
 " ###### ALE ######
+let g:ale_python_auto_pipenv = 1
 
 " when to lint
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_filetype_changed = 1
+let g:ale_lint_delay = 1000
 
 " add sign column emoticons
 let g:ale_sign_error = 'e'
@@ -219,10 +224,14 @@ fun! OpenFilesInSplit(left, right)
   execute "normal! \<c-w>t"
 endfun
 
-fun! HandleOpenTestInSplit(file, extention_regex, extention_replace, path_regex, path_replace)
+fun! HandleOpenTestInSplit(file, first, extention_regex, extention_replace, path_regex, path_replace)
   let f1 = substitute(a:file, a:extention_regex, a:extention_replace, "")
   let f2 = substitute(f1, a:path_regex, a:path_replace, "")
-  call OpenFilesInSplit(f2, a:file)
+  if a:first == 0
+    call OpenFilesInSplit(a:file, f2)
+  else
+    call OpenFilesInSplit(f2, a:file)
+  endif
   exec "w"
 endfun
 
@@ -230,17 +239,21 @@ fun! OpenSpecInSplit()
   let file = expand('%:p')
 
   if match(file, "app/javascript/packs/claims_dashboard") >= 0
-    call HandleOpenTestInSplit(file,"\\.vue", "-test.js","/packs\\/", "/test/")
+    call HandleOpenTestInSplit(file, 1, "\\.vue", "-test.js","/packs\\/", "/test/")
   elseif match(file, "app/javascript/test/claims_dashboard") >= 0
-    call HandleOpenTestInSplit(file,"\\-test.js", ".vue","test\\/", "packs/")
+    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".vue","test\\/", "packs/")
+  elseif match(file, "app/javascript/packs/") >= 0
+    call HandleOpenTestInSplit(file, 1, "\\.js", "-test.js","/packs\\/", "/test/")
+  elseif match(file, "app/javascript/test/") >= 0
+    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".js","test\\/", "packs/")
   elseif match(file, "app/") >= 0
-    call HandleOpenTestInSplit(file,"\\.rb", "_spec.rb","app\\/", "spec/")
+    call HandleOpenTestInSplit(file, 1, "\\.rb", "_spec.rb","app\\/", "spec/")
   elseif match(file, "spec/") >= 0
-    call HandleOpenTestInSplit(file,"\_spec", "","spec/", "app/")
+    call HandleOpenTestInSplit(file, 0, "\_spec", "","spec/", "app/")
   elseif match(file, "src") >= 0
-    call HandleOpenTestInSplit(file,"\\.js", "-test.js","src\\/", "test/")
+    call HandleOpenTestInSplit(file, 1, "\\.js", "-test.js","src\\/", "test/")
   elseif match(file, "test") >= 0
-    call HandleOpenTestInSplit(file,"\\-test.js", ".js","test\\/", "src/")
+    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".js","test\\/", "src/")
   endif
 endfun
 com! OpenSpecInSplit :call OpenSpecInSplit()

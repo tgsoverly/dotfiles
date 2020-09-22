@@ -1,42 +1,5 @@
 #!/usr/bin/env bash
-
-function remap_internal_keyboard() {
-  KEYBOARD_ID=$1
-  defaults -currentHost write -g "com.apple.keyboard.modifiermapping.${KEYBOARD_ID}-0" -array \
-'<dict>
-    <key>HIDKeyboardModifierMappingDst</key>
-    <integer>-1</integer>
-    <key>HIDKeyboardModifierMappingSrc</key>
-    <integer>0</integer>
-</dict>'
-}
-
-# Seil
-function remap_caps_lock() {
-  defaults write ~/Library/Preferences/org.pqrs.Seil.plist -array '<dict>
-  	<key>MigrationUtilitiesCurrentBundleIdentifer</key>
-  	<string>org.pqrs.Seil</string>
-  	<key>SUFeedURL</key>
-  	<string>https://pqrs.org/osx/karabiner/files/seil-appcast.xml</string>
-  	<key>SUHasLaunchedBefore</key>
-  	<true/>
-  	<key>SULastCheckTime</key>
-  	<date>2017-05-15T18:35:23Z</date>
-  	<key>isCheckUpdate</key>
-  	<true/>
-  	<key>kResumeAtLogin</key>
-  	<true/>
-  	<key>sysctl</key>
-  	<dict>
-  		<key>enable_capslock</key>
-  		<integer>1</integer>
-  		<key>keycode_capslock</key>
-  		<integer>53</integer>
-  	</dict>
-  </dict>'
-}
-
-export SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export SCRIPTS_DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 # Set my editor and git editor
 export EDITOR="nvim"
@@ -44,7 +7,7 @@ export GIT_EDITOR='nvim'
 
 # Use VI key bindings
 # Use again when I figure out whey the git prompt makes the cursor funny
-# set -o vi
+bindkey -v
 # bind 'set show-mode-in-prompt on'
 
 # Don't check mail when opening terminal.
@@ -54,8 +17,8 @@ unset MAILCHECK
 alias econfig="nvim ~"
 alias ehosts="nvim /etc/hosts"
 
-bind '"[A":history-search-backward'
-bind '"[B":history-search-forward'
+bindkey '\e[A' history-search-backward
+bindkey '\e[B' history-search-forward
 
 # APPS
 alias te='open -e'  #textedit
@@ -92,17 +55,6 @@ alias size10='find . -type d -print0 | xargs -0 du -s | sort -n | tail -10 | cut
 
 
 # Git Alias from bash it
-alias gcl='git clone'
-alias ga='git add'
-alias gall='git add -A'
-alias gus='git reset HEAD'
-alias gm="git merge"
-alias get='git'
-alias gst='git status'
-alias gs='git status'
-alias gss='git status -s'
-alias gl='git pull'
-alias gpr='git pull --rebase'
 alias gp='git push'
 alias gpr='git fetch --prune'
 alias gpo='git push origin'
@@ -120,8 +72,8 @@ alias ggs="gg --stat"
 alias gsl="git shortlog -sn"
 alias gw="git whatchanged"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias gaa="git add .;get commit --amend --no-edit"
-alias gaap="git add .;get commit --amend --no-edit;git push -f"
+alias gaa="git add .;git commit --amend --no-edit"
+alias gaap="git add .;git commit --amend --no-edit;git push -f"
 
 # Mouse
 alias fastmouse='defaults write -g com.apple.mouse.scaling 17'
