@@ -1,5 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
-  Plug 'Shougo/deoplete.nvim'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'ap/vim-buftabline'
   Plug 'chaoren/vim-wordmotion'
   Plug 'christoomey/vim-sort-motion'
@@ -30,6 +30,19 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'vim-scripts/argtextobj.vim'
   Plug 'dense-analysis/ale'
 call plug#end()
+
+let g:coc_global_extensions = ['coc-solargraph', 'coc-json', 'coc-css', 'coc-html']
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 set dir=/tmp//
 set hidden
@@ -137,8 +150,7 @@ let g:wordmotion_mappings = {
 
 " Sort tags in order of appearance by default
 let g:tagbar_sort = 0
-
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 
 " ###### ALE ######
 let g:ale_python_auto_pipenv = 1
