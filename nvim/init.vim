@@ -210,6 +210,7 @@ let g:NERDTreeWinSize=60
 
 " faster fzf fuzzy find respecting gitignore
 let $FZF_DEFAULT_COMMAND = '(git ls-tree -r --name-only HEAD || find . -path "*/\.*" -prune -o -type f -print -o -type l -print | sed s/^..//) 2> /dev/null'
+let g:fzf_layout = { 'down': '~40%' }
 
 nnoremap <leader>ls :OpenSpecInSplit<cr>
 
