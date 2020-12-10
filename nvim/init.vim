@@ -1,8 +1,9 @@
 call plug#begin('~/.config/nvim/plugged')
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'ap/vim-buftabline'
+  Plug 'benmills/vimux'
   Plug 'chaoren/vim-wordmotion'
   Plug 'christoomey/vim-sort-motion'
+  Plug 'dense-analysis/ale'
   Plug 'farmergreg/vim-lastplace'
   Plug 'janko-m/vim-test'
   Plug 'jlanzarotta/bufexplorer'
@@ -15,20 +16,22 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'michaeljsmith/vim-indent-object'
   Plug 'milch/vim-fastlane'
   Plug 'mileszs/ack.vim'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'pangloss/vim-javascript'
+  Plug 'preservim/nerdtree'
   Plug 'roman/golden-ratio'
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
-  Plug 'scrooloose/nerdtree'
+  Plug 'tgsoverly/watupdoc.vim', {'branch': 'main'}
   Plug 'tommcdo/vim-exchange'
   Plug 'tomtom/tcomment_vim'
   Plug 'tpope/vim-endwise'
   Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-projectionist'
   Plug 'tpope/vim-surround'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'vim-scripts/argtextobj.vim'
-  Plug 'dense-analysis/ale'
 call plug#end()
 
 let g:coc_global_extensions = ['coc-solargraph', 'coc-json', 'coc-css', 'coc-html']
@@ -89,9 +92,9 @@ nmap <silent> <LocalLeader>nf :NERDTreeFind<CR> | :vertical resize 60<CR>
 nmap <silent> <LocalLeader>nh :nohls<CR>
 nmap <silent> <LocalLeader>nt :NERDTreeToggle<CR>
 
-nmap <silent> <LocalLeader>rb :wa <bar> :TestFile -strategy=neovim<CR>
-nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest -strategy=neovim<CR>
-nmap <silent> <LocalLeader>rl :wa <bar> :TestLast -strategy=neovim<CR>
+nmap <silent> <LocalLeader>rb :wa <bar> :TestFile <CR>
+nmap <silent> <LocalLeader>rf :wa <bar> :TestNearest <CR>
+nmap <silent> <LocalLeader>rl :wa <bar> :TestLast <CR>
 nmap <silent> <LocalLeader>tt :TagbarToggle<CR>
 nmap <silent> <LocalLeader>tf :TagbarOpen fj<CR>
 nmap <silent> <LocalLeader>tc :TagbarClose<CR>
@@ -111,6 +114,8 @@ xmap <silent> X <Plug>(Exchange)
 nmap <silent> cxc <Plug>(ExchangeClear)
 nmap <silent> cxx <Plug>(ExchangeLine)
 
+nmap <silent> <LocalLeader>ow <Plug>(WatupdocOpen)
+
 nmap <silent> [q :cprevious<CR>
 nmap <silent> ]q :cnext<CR>
 nmap <silent> [Q :cfirst<CR>
@@ -126,6 +131,7 @@ let g:neoterm_default_mod = 'rightbelow'
 let g:neoterm_size = '20'
 let g:test#custom_transformations = {'clear': function('ClearTerminalTransform')}
 let g:test#transformation = 'clear'
+let test#strategy = 'vimux'
 
 " Allows Ctrl-P to find hidden files like .env
 let g:ctrlp_show_hidden = 1
@@ -223,50 +229,3 @@ let g:NERDTreeWinSize=60
 " faster fzf fuzzy find respecting gitignore
 let $FZF_DEFAULT_COMMAND = '(git ls-tree -r --name-only HEAD || find . -path "*/\.*" -prune -o -type f -print -o -type l -print | sed s/^..//) 2> /dev/null'
 let g:fzf_layout = { 'down': '~40%' }
-
-nnoremap <leader>ls :OpenSpecInSplit<cr>
-
-fun! OpenFilesInSplit(left, right)
-  if a:left == a:right
-    return
-  endif
-
-  only
-  exec "edit " . a:left
-  exec "vs " . a:right
-  execute "normal! \<c-w>t"
-endfun
-
-fun! HandleOpenTestInSplit(file, first, extention_regex, extention_replace, path_regex, path_replace)
-  let f1 = substitute(a:file, a:extention_regex, a:extention_replace, "")
-  let f2 = substitute(f1, a:path_regex, a:path_replace, "")
-  if a:first == 0
-    call OpenFilesInSplit(a:file, f2)
-  else
-    call OpenFilesInSplit(f2, a:file)
-  endif
-  exec "w"
-endfun
-
-fun! OpenSpecInSplit()
-  let file = expand('%:p')
-
-  if match(file, "app/javascript/packs/claims_dashboard") >= 0
-    call HandleOpenTestInSplit(file, 1, "\\.vue", "-test.js","/packs\\/", "/test/")
-  elseif match(file, "app/javascript/test/claims_dashboard") >= 0
-    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".vue","test\\/", "packs/")
-  elseif match(file, "app/javascript/packs/") >= 0
-    call HandleOpenTestInSplit(file, 1, "\\.js", "-test.js","/packs\\/", "/test/")
-  elseif match(file, "app/javascript/test/") >= 0
-    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".js","test\\/", "packs/")
-  elseif match(file, "app/") >= 0
-    call HandleOpenTestInSplit(file, 1, "\\.rb", "_spec.rb","app\\/", "spec/")
-  elseif match(file, "spec/") >= 0
-    call HandleOpenTestInSplit(file, 0, "\_spec", "","spec/", "app/")
-  elseif match(file, "src") >= 0
-    call HandleOpenTestInSplit(file, 1, "\\.js", "-test.js","src\\/", "test/")
-  elseif match(file, "test") >= 0
-    call HandleOpenTestInSplit(file, 0, "\\-test.js", ".js","test\\/", "src/")
-  endif
-endfun
-com! OpenSpecInSplit :call OpenSpecInSplit()
