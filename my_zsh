@@ -16,6 +16,7 @@ unset MAILCHECK
 # Edit common files
 alias econfig="nvim ~"
 alias ehosts="nvim /etc/hosts"
+alias lconfig='rm -f ~/.config/nvim && rm -f ~/.tmux.conf && ln -s ~/code/dotfiles/nvim/ ~/.config/nvim && ln -s ~/code/dotfiles/my_tmux.conf ~/.tmux.conf'
 
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward

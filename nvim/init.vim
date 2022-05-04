@@ -1,5 +1,6 @@
 if exists('g:vsvode')
   " VSCODE
+  inoremap kj <Esc>
 else
   " NEOVIM
   call plug#begin('~/.config/nvim/plugged')
