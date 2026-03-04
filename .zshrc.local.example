@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+# Local configuration file for machine-specific settings
+# Copy this to ~/.zshrc.local and customize for your machine
+# This file is NOT version controlled
+
+# =============================================================================
+# API Keys and Secrets
+# =============================================================================
+# export LOCALSTACK_AUTH_TOKEN="ls-..."
+# export ANTHROPIC_API_KEY="..."
+# export OPENAI_API_KEY="sk-..."
+
+# =============================================================================
+# AWS Configuration
+# =============================================================================
+# export AWS_VAULT_KEYCHAIN_NAME=login
+# export AWS_VAULT_PROMPT=osascript
+# export AWS_PROFILE="my-profile"
+# export AWS_REGION="us-east-1"
+
+# =============================================================================
+# Work/Project-Specific Paths
+# =============================================================================
+# export FOREFLIGHT_SERVER_DIR=/Users/toverly/foreflight
+# export PATH="$PATH:$HOME/code/server/scripts/deployer"
+
+# =============================================================================
+# Custom Sources
+# =============================================================================
+# Load project-specific environments
+# if [ -f ~/code/duster/dust ]; then
+#   source ~/code/duster/dust all
+# fi
+
+# Load local bin environment
+# if [ -f "$HOME/.local/bin/env" ]; then
+#   . "$HOME/.local/bin/env"
+# fi
+
+# =============================================================================
+# Work-Specific Aliases
+# =============================================================================
+# alias work='cd ~/work/projects'
+# alias ssh-work='ssh user@work-server'
