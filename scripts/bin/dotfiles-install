@@ -77,6 +77,17 @@ elif [ -f "${DOTFILES_DIR}/gitconfig" ]; then
   symlink_file "${DOTFILES_DIR}/gitconfig" "${HOME}/.gitconfig"
 fi
 
+# Symlink Claude Code settings
+if [ -f "${DOTFILES_DIR}/ai/claude-code/settings.json" ]; then
+  mkdir -p "${HOME}/.claude"
+  symlink_file "${DOTFILES_DIR}/ai/claude-code/settings.json" "${HOME}/.claude/settings.json"
+  # Remove any mcpServers from ~/.claude.json to avoid conflicts with settings.json
+  if [ -f "${HOME}/.claude.json" ]; then
+    log_info "Cleaning mcpServers from ~/.claude.json..."
+    python3 "${DOTFILES_DIR}/scripts/bin/claude-mcp-clean"
+  fi
+fi
+
 # Make scripts executable
 if [ -d "${DOTFILES_DIR}/scripts/bin" ]; then
   log_info "Making scripts executable..."
