@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+# Sets up iTerm2 with two tabs, each split vertically, all panes in ~/code
+
+osascript <<'APPLESCRIPT'
+tell application "iTerm2"
+  tell current window
+    -- First tab (already exists) - set directory
+    tell current session of current tab
+      write text "cd ~/code && clear"
+    end tell
+
+    -- Split first tab vertically
+    tell current session of current tab
+      set newSession to (split vertically with default profile)
+    end tell
+    tell newSession
+      write text "cd ~/code && clear"
+    end tell
+
+    -- Create second tab
+    set newTab to (create tab with default profile)
+    tell current session of newTab
+      write text "cd ~/code && clear"
+    end tell
+
+    -- Split second tab vertically
+    tell current session of newTab
+      set newSession2 to (split vertically with default profile)
+    end tell
+    tell newSession2
+      write text "cd ~/code && clear"
+    end tell
+
+    -- Switch back to first tab
+    select first tab
+  end tell
+end tell
+APPLESCRIPT
