@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Setup MCP servers for Claude Code using the proper CLI commands
+# This replaces the old approach of adding mcpServers to settings.json
+
+echo "Setting up Claude Code MCP servers..."
+
+# Add Google Workspace MCP server
+echo "→ Adding Google Workspace MCP server..."
+if [ -n "$GOOGLE_OAUTH_CLIENT_ID" ] && [ -n "$GOOGLE_OAUTH_CLIENT_SECRET" ]; then
+    if claude mcp add --transport stdio google-workspace \
+        --env GOOGLE_OAUTH_CLIENT_ID="${GOOGLE_OAUTH_CLIENT_ID}" \
+        --env GOOGLE_OAUTH_CLIENT_SECRET="${GOOGLE_OAUTH_CLIENT_SECRET}" \
+        --env OAUTHLIB_INSECURE_TRANSPORT="1" \
+        -- uvx workspace-mcp --tool-tier core 2>&1 | grep -q "already exists"; then
+        echo "  ✓ Already configured"
+    fi
+else
+    echo "  ⚠ Skipping (GOOGLE_OAUTH_CLIENT_ID or GOOGLE_OAUTH_CLIENT_SECRET not set)"
+fi
+
+# Add GitHub MCP server (requires MCP_GITHUB_PERSONAL_ACCESS_TOKEN env var)
+if [ -n "$MCP_GITHUB_PERSONAL_ACCESS_TOKEN" ]; then
+    echo "→ Adding GitHub MCP server..."
+    if claude mcp add --transport stdio github \
+        --env GITHUB_PERSONAL_ACCESS_TOKEN="${MCP_GITHUB_PERSONAL_ACCESS_TOKEN}" \
+        -- npx -y @modelcontextprotocol/server-github 2>&1 | grep -q "already exists"; then
+        echo "  ✓ Already configured"
+    fi
+else
+    echo "⚠ Skipping GitHub MCP server (MCP_GITHUB_PERSONAL_ACCESS_TOKEN not set)"
+fi
+
+# Add Atlassian MCP server (SSE transport)
+echo "→ Adding Atlassian MCP server..."
+if claude mcp add --transport sse atlassian https://mcp.atlassian.com/v1/sse 2>&1 | grep -q "already exists"; then
+    echo "  ✓ Already configured"
+fi
+
+echo ""
+echo "✓ MCP servers configured in ~/.claude.json"
+echo ""
+echo "Next steps:"
+echo "  1. Restart Claude Code"
+echo "  2. Authenticate with OAuth prompts (Google Sheets, Atlassian, etc.)"
+echo "  3. MCP tools will be available with mcp__ prefix"
+echo ""
+echo "To manage MCP servers:"
+echo "  claude mcp list                    # List all servers"
+echo "  claude mcp enable [server-name]    # Enable a server"
+echo "  claude mcp disable [server-name]   # Disable a server"
+echo "  /mcp                              # Manage in Claude Code REPL"
