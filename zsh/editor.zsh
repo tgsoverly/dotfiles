@@ -2,9 +2,9 @@
 # Editor configuration
 
 # Set default editor (update this to your preferred editor)
-export EDITOR="code"
-export GIT_EDITOR="code --wait"
-export VISUAL="code"
+export EDITOR="vi"
+export GIT_EDITOR="vi"
+export VISUAL="vi"
 
 # Uncomment and modify for other editors:
 # export EDITOR="vim"
